@@ -11,7 +11,7 @@ type BotCommand = {
 DotEnv.Load() |> ignore
 
 
-let SED_REGEX = Regex @"s\/(.*?)\/(.*)?"
+let SED_REGEX = Regex @"^s\/(.*?)\/(.*)?"
 let applySed (input: string) (sedCommand: string) =
     let m = SED_REGEX.Match(sedCommand)
     if m.Success then
@@ -29,7 +29,7 @@ let isMessageSedReplace (message: Types.Message) =
   
     match message.ReplyToMessage, message.Text with
     | Some reply, Some text ->
-      let isReplace = SED_REGEX.IsMatch(text) && not (isUserBot reply.From)
+      let isReplace = SED_REGEX.IsMatch text && not (isUserBot reply.From)
       isReplace, applySed reply.Text.Value text
       
     | _ -> false, ""
