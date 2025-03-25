@@ -34,7 +34,12 @@ let isMessageSedReplace (message: Types.Message) =
       
     | _ -> false, ""
 
-
+let poorlyMentioned (message: Types.Message) =
+  match message.Text with
+  | Some text -> 
+    text.Contains("poorly", System.StringComparison.OrdinalIgnoreCase) && 
+    not (text.Contains("banido pelo macabeus", System.StringComparison.OrdinalIgnoreCase))
+  | _ -> false
 let updateArrived (ctx: UpdateContext) =
     processCommands ctx [|
       cmd "/ranking" (fun _ -> printfn "Chamou /ranking")
@@ -44,8 +49,8 @@ let updateArrived (ctx: UpdateContext) =
     match ctx.Update.Message with
         | Some message ->
           let isSed, replaced = isMessageSedReplace message
-          printfn "%A %A" isSed replaced
           if isSed then sendRequest (Api.sendMessageReply message.Chat.Id replaced message.ReplyToMessage.Value.MessageId)
+          else if poorlyMentioned message then sendRequest (Api.sendMessageReply message.Chat.Id "Poorly foi banido pelo Macabeus." message.MessageId)
           
         | _ -> ()
 
