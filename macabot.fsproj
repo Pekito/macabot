@@ -14,6 +14,7 @@
     <PackageReference Include="FsToolkit.ErrorHandling" Version="4.18.0" />
     <PackageReference Include="Funogram" Version="3.0.2" />
     <PackageReference Include="Funogram.Telegram" Version="8.3.0" />
+    <PackageReference Include="SqlHydra.Query" Version="2.8.0" />
     <PackageReference Include="Telegram.Bot" Version="22.4.4" />
   </ItemGroup>
 
