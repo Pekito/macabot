@@ -11,13 +11,24 @@ type BotCommand = {
 DotEnv.Load() |> ignore
 
 
-let SED_REGEX = Regex @"^s\/(.*?)\/(.*)?"
+let SED_REGEX = Regex @"^s\/([^\/]+)\/([^\/]*)\/?([a-zA-Z]*)?$"
 let applySed (input: string) (sedCommand: string) =
     let m = SED_REGEX.Match(sedCommand)
     if m.Success then
         let search = m.Groups.[1].Value
         let replace = m.Groups.[2].Value
-        input.Replace(search, replace)
+        let flags = m.Groups.[3].Value
+        let options = 
+            let mutable options = RegexOptions.None
+            if flags.Contains("i") then options <- options ||| RegexOptions.IgnoreCase
+            if flags.Contains("m") then options <- options ||| RegexOptions.Multiline
+            if flags.Contains("s") then options <- options ||| RegexOptions.Singleline
+            if flags.Contains("x") then options <- options ||| RegexOptions.IgnorePatternWhitespace
+            options
+        let regex = Regex(search, options)
+        if flags.Contains "g" then regex.Replace(input, replace)
+        else regex.Replace(input, replace, 1)
+        
     else
         ""
 
