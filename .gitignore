@@ -3,5 +3,7 @@ obj
 .vscode
 .env
 .direnv
-
 .fake
+database.db
+database.db-shm
+database.db-wal
