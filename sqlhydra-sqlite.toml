@@ -1,0 +1,13 @@
+[general]
+connection = "Data Source=database.db;Version=3;"
+output = "Database.fs"
+namespace = "Macabot.Database"
+cli_mutable = true
+[sqlhydra_query_integration]
+provider_db_type_attributes = true
+table_declarations = true
+[readers]
+reader_type = "System.Data.Common.DbDataReader"
+[filters]
+include = []
+exclude = []
