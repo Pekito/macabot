@@ -25,8 +25,8 @@ let isUserBot (userOption: Types.User option) =
   match userOption with
   | Some userOption -> userOption.IsBot
   | _ -> false
+
 let isMessageSedReplace (message: Types.Message) =
-  
     match message.ReplyToMessage, message.Text with
     | Some reply, Some text ->
       let isReplace = SED_REGEX.IsMatch text && not (isUserBot reply.From)
@@ -40,6 +40,7 @@ let poorlyMentioned (message: Types.Message) =
     text.Contains("poorly", System.StringComparison.OrdinalIgnoreCase) && 
     not (text.Contains("banido pelo macabeus", System.StringComparison.OrdinalIgnoreCase))
   | _ -> false
+
 let updateArrived (ctx: UpdateContext) =
     processCommands ctx [|
       cmd "/ranking" (fun _ -> printfn "Chamou /ranking")
