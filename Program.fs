@@ -3,7 +3,7 @@ open Funogram.Telegram
 open Funogram.Telegram.Bot
 open dotenv.net
 open System.Text.RegularExpressions
-
+open FsToolkit.ErrorHandling
 type BotCommand = {
     Name: string;
     Arguments: string
@@ -38,12 +38,14 @@ let isUserBot (userOption: Types.User option) =
   | _ -> false
 
 let isMessageSedReplace (message: Types.Message) =
-    match message.ReplyToMessage, message.Text with
-    | Some reply, Some text ->
-      let isReplace = SED_REGEX.IsMatch text && not (isUserBot reply.From)
-      isReplace, applySed reply.Text.Value text
-      
-    | _ -> false, ""
+    option {
+        let! reply = message.ReplyToMessage
+        let! text = message.Text
+        let! textReply = reply.Text
+        let isReplace = SED_REGEX.IsMatch text && not (isUserBot reply.From)
+        return isReplace, applySed textReply text
+      } |> Option.defaultValue (false, "")
+
 
 let poorlyMentioned (message: Types.Message) =
   match message.Text with
