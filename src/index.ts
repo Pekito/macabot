@@ -1,26 +1,21 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
-
+import TelegramBot, { TelegramExecutionContext } from '@codebam/cf-workers-telegram-bot';
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		const url = new URL(request.url);
-		switch (url.pathname) {
-			case '/message':
-				return new Response('Hello, World!');
-			case '/random':
-				return new Response(crypto.randomUUID());
-			default:
-				return new Response('Not Found', { status: 404 });
-		}
+	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+		const bot = new TelegramBot(env.TELEGRAM_BOT_TOKEN);
+		console.log("foi", env.TELEGRAM_BOT_TOKEN);
+		await bot
+			.on(':message', async function (context: TelegramExecutionContext) {
+				switch (context.update_type) {
+					case 'message':
+						await context.reply('Hello from Cloudflare workers');
+						break;
+
+					default:
+						break;
+				}
+				return new Response('ok');
+			})
+			.handle(request.clone());
+		return new Response('ok');
 	},
-} satisfies ExportedHandler<Env>;
+};
