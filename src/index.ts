@@ -19,7 +19,12 @@ export default {
 						const [, pattern, replacer, flags] = sedResult;
 						const regex = new RegExp(pattern, flags);
 						const replacedText = target.text.replace(regex, replacer);
-						await context.reply(replacedText);
+						await context.api.sendMessage(bot.api.href, {
+							text: replacedText,
+							parse_mode: '',
+							chat_id: message.chat.id,
+							reply_to_message_id: target.message_id
+						})
 						break;
 
 					default:
