@@ -1,6 +1,5 @@
 import TelegramBot, { TelegramExecutionContext } from '@codebam/cf-workers-telegram-bot';
-
-const SED_REGEX = /^s\/([^\/]+)\/([^\/]*)\/?([a-zA-Z]*)?$/
+import { sed } from 'sed-lite';
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const bot = new TelegramBot(env.TELEGRAM_BOT_TOKEN);
@@ -14,12 +13,14 @@ export default {
 						const target = message.reply_to_message;
 						if(!target?.text) return new Response();
 						if(!sedText?.startsWith("s/")) return new Response();
-						const sedResult = SED_REGEX.exec(sedText);
-						if(!sedResult) return new Response();
-						const [, pattern, replacer, flags] = sedResult;
-						const regex = new RegExp(pattern, flags);
-						const replacedText = target.text.replace(regex, replacer);
-						await context.reply(replacedText);
+						try {
+							const sedTransform = sed(sedText);
+							const replacedText = sedTransform(target.text);
+							await context.reply(replacedText);
+						} catch (error) {
+							// Invalid sed syntax, ignore
+							return new Response();
+						}
 						break;
 
 					default:
