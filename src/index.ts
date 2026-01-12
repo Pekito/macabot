@@ -17,7 +17,7 @@ export default {
 							const replacedText = sedTransform(target.text);
 							await context.reply(replacedText);
 						} catch (error) {
-							// Invalid sed syntax, ignore
+							console.error(error)
 							return new Response();
 						}
 						break;
