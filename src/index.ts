@@ -13,7 +13,9 @@ export default {
 						if(!target?.text) return new Response();
 						if(!sedText?.startsWith("s/")) return new Response();
 						try {
-							const sedTransform = sed(sedText);
+							const endsWithValidSlash = sedText.endsWith("/") && !sedText.endsWith('\\/');
+							const validSedtext = endsWithValidSlash ? sedText : sedText + "/"
+							const sedTransform = sed(validSedtext);
 							const replacedText = sedTransform(target.text);
 							await context.reply(replacedText);
 						} catch (error) {
