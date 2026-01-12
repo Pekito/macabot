@@ -3,7 +3,6 @@ import { sed } from 'sed-lite';
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const bot = new TelegramBot(env.TELEGRAM_BOT_TOKEN);
-		console.log("foi", env.TELEGRAM_BOT_TOKEN);
 		await bot
 			.on(':message', async function (context: TelegramExecutionContext) {
 				switch (context.update_type) {
