@@ -1,5 +1,6 @@
 import TelegramBot, { TelegramExecutionContext } from '@codebam/cf-workers-telegram-bot';
 import { sed } from 'sed-lite';
+import { reply_to } from './utils';
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const bot = new TelegramBot(env.TELEGRAM_BOT_TOKEN);
@@ -17,7 +18,7 @@ export default {
 							const validSedtext = endsWithValidSlash ? sedText : sedText + "/"
 							const sedTransform = sed(validSedtext);
 							const replacedText = sedTransform(target.text);
-							await context.reply(replacedText);
+							await reply_to(context, replacedText, target.message_id)
 						} catch (error) {
 							console.error(error)
 							return new Response();
