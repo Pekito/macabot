@@ -16,6 +16,7 @@ export default {
 							try {
 								const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
 								const data = await res.json() as { bitcoin: { usd: number } };
+								console.log("Bitcoin Request", data);
 								const price = data.bitcoin.usd.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 								await reply_to(context, `Bitcoin: ${price}`, message.message_id);
 							} catch (error) {
