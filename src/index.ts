@@ -10,7 +10,22 @@ export default {
 				switch (context.update_type) {
 					case 'message':
 						const message = context.update.message!;
-						const sedText = message.text;
+						const text = message.text;
+
+						if (text?.toLowerCase() === '/macabot bitcoin') {
+							try {
+								const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+								const data = await res.json() as { bitcoin: { usd: number } };
+								const price = data.bitcoin.usd.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+								await reply_to(context, `Bitcoin: ${price}`, message.message_id);
+							} catch (error) {
+								console.error(error);
+								await reply_to(context, 'Failed to fetch Bitcoin price.', message.message_id);
+							}
+							break;
+						}
+
+						const sedText = text;
 						const target = message.reply_to_message;
 						if(!target?.text) return new Response();
 						if(!sedText?.startsWith("s/")) return new Response();
