@@ -14,7 +14,9 @@ export default {
 
 						if (text?.toLowerCase() === '/macabot bitcoin') {
 							try {
-								const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+								const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd', {
+									headers: { 'User-Agent': 'macabot/1.0' },
+								});
 								const data = await res.json() as { bitcoin: { usd: number } };
 								console.log("Bitcoin Request", data);
 								const price = data.bitcoin.usd.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
