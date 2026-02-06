@@ -28,6 +28,22 @@ export default {
 							break;
 						}
 
+						if (text?.toLowerCase() === '/macabot usd') {
+							try {
+								const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=brl', {
+									headers: { 'User-Agent': 'macabot/1.0' },
+								});
+								const data = await res.json() as { tether: { brl: number } };
+								console.log("USDT Request", data);
+								const price = data.tether.brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+								await reply_to(context, `USDT: ${price}`, message.message_id);
+							} catch (error) {
+								console.error(error);
+								await reply_to(context, 'Failed to fetch USDT price.', message.message_id);
+							}
+							break;
+						}
+
 						const sedText = text;
 						const target = message.reply_to_message;
 						if(!target?.text) return new Response();
