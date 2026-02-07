@@ -33,7 +33,12 @@ export default {
 							if (!userMessage) break;
 
 							try {
-								const messages: { role: string; content: string }[] = [];
+								const messages: { role: string; content: string }[] = [
+									{
+										role: 'system',
+										content: 'You are Macagrok, a bot in a Telegram group chat. Keep your responses short and concise — prefer a few sentences over long paragraphs. Only give longer answers when explicitly required by the user',
+									},
+								];
 
 								const replyText = message.reply_to_message?.text;
 								if (replyText) {
@@ -49,7 +54,7 @@ export default {
 										'Content-Type': 'application/json',
 									},
 									body: JSON.stringify({
-										model: 'openai/gpt-4o-search-preview',
+										model: 'openai/gpt-4o-mini-search-preview',
 										plugins: [{ id: 'web', max_results: 5 }],
 										messages,
 									}),
