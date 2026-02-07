@@ -18,6 +18,7 @@
 	},
 	"dependencies": {
 		"@codebam/cf-workers-telegram-bot": "^9.1.1",
-		"sed-lite": "^1.1.0"
+		"sed-lite": "^1.1.0",
+		"telegram-markdown-v2": "^0.0.4"
 	}
 }
