@@ -36,7 +36,7 @@ export default {
 								const messages: { role: string; content: string }[] = [
 									{
 										role: 'system',
-										content: 'You are Macagrok, a bot in a Telegram group chat. Keep your responses short and concise — prefer a few sentences over long paragraphs. Only give longer answers when explicitly required by the user',
+										content: 'You are Macagrok, a bot in a Telegram group chat. Keep your responses short and concise — prefer a few sentences over long paragraphs. Never use more than 100 words. Only give longer answers when explicitly required by the user. Do not user Markdown notation',
 									},
 								];
 
