@@ -6,4 +6,5 @@ declare namespace Cloudflare {
 }
 interface Env extends Cloudflare.Env {
 	TELEGRAM_BOT_TOKEN: string
+	OPENROUTER_API_KEY: string
 }

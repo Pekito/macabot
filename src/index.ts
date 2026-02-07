@@ -28,6 +28,45 @@ export default {
 							break;
 						}
 
+						if (text?.toLowerCase().startsWith('/macagrok ')) {
+							const userMessage = text.substring('/macagrok '.length).trim();
+							if (!userMessage) break;
+
+							try {
+								const messages: { role: string; content: string }[] = [];
+
+								const replyText = message.reply_to_message?.text;
+								if (replyText) {
+									messages.push({ role: 'user', content: `Context from a previous message:\n${replyText}` });
+								}
+
+								messages.push({ role: 'user', content: userMessage });
+
+								const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+									method: 'POST',
+									headers: {
+										'Authorization': `Bearer ${env.OPENROUTER_API_KEY}`,
+										'Content-Type': 'application/json',
+									},
+									body: JSON.stringify({
+										model: 'openai/gpt-4o-search-preview',
+										plugins: [{ id: 'web', max_results: 5 }],
+										messages,
+									}),
+								});
+
+								const data = await res.json() as { choices: { message: { content: string } }[] };
+								const reply = data.choices?.[0]?.message?.content;
+								if (!reply) throw new Error('No response from model');
+
+								await reply_to(context, reply, message.message_id);
+							} catch (error) {
+								console.error(error);
+								await reply_to(context, 'Failed to get a response from Macagrok.', message.message_id);
+							}
+							break;
+						}
+
 						if (text?.toLowerCase() === '/macabot usd') {
 							try {
 								const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=brl', {
