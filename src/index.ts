@@ -18,7 +18,6 @@ export default {
 									headers: { 'User-Agent': 'macabot/1.0' },
 								});
 								const data = await res.json() as { bitcoin: { usd: number } };
-								console.log("Bitcoin Request", data);
 								const price = data.bitcoin.usd.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 								await reply_to(context, `Bitcoin: ${price}`, message.message_id);
 							} catch (error) {
@@ -78,7 +77,6 @@ export default {
 									headers: { 'User-Agent': 'macabot/1.0' },
 								});
 								const data = await res.json() as { tether: { brl: number } };
-								console.log("USDT Request", data);
 								const price = data.tether.brl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 								await reply_to(context, `USDT: ${price}`, message.message_id);
 							} catch (error) {
