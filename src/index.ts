@@ -36,7 +36,7 @@ export default {
 								const messages: { role: string; content: string }[] = [
 									{
 										role: 'system',
-										content: 'You are Macagrok, a bot in a Telegram group chat. Keep your responses short and concise — prefer a few sentences over long paragraphs. Never use more than 100 words. Only give longer answers when explicitly required by the user. Do not user Markdown notation',
+										content: 'You are Macagrok, a bot in a Telegram group chat. Keep your responses short and concise — prefer a few sentences over long paragraphs. Never use more than 100 words. Only give longer answers when explicitly required by the user.',
 									},
 								];
 
@@ -64,7 +64,7 @@ export default {
 								const reply = data.choices?.[0]?.message?.content;
 								if (!reply) throw new Error('No response from model');
 
-								await reply_to(context, reply, message.message_id);
+								await reply_to(context, reply, message.message_id, "MarkdownV2");
 							} catch (error) {
 								console.error(error);
 								await reply_to(context, 'Failed to get a response from Macagrok.', message.message_id);
