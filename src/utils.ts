@@ -1,4 +1,5 @@
 import { TelegramExecutionContext } from "@codebam/cf-workers-telegram-bot";
+import { convert } from "telegram-markdown-v2";
 
 export function getChatId(context: TelegramExecutionContext) {
     if (context.update.message?.chat.id) {
@@ -19,6 +20,7 @@ export function getMessageId(context: TelegramExecutionContext) {
    * @returns Promise with the API response
    */
   export async function reply_to(context: TelegramExecutionContext, message: string, message_to_reply_id: string | number, parse_mode = '', options: Record<string, number | string | boolean> = {}) {
+    if(parse_mode === "MarkdownV2") message = convert(message);
     switch (context.update_type) {
       case 'message':
       case 'photo':
